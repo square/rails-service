@@ -1,0 +1,7 @@
+app: "fooxample"
+setup:
+  nodes:
+    - abc123.nyc.acme
+    - abc456.nyc.acme
+    - abc789.nyc.acme
+magic: <%= 2*2 %>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= render_meta_title %></title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/tomorrow.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/languages/json.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <%= csrf_meta_tags %>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    iframe {
+      overflow: auto;
+      border: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    pre {
+      background: #fff;
+    }
+
+    .wrapper {
+      display: block;
+      width: 80%;
+      margin: auto;
+      overflow: auto;
+    }
+
+    #top {
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    #top h1 {
+      margin-left: 160px;
+    }
+
+    #top li span {
+      text-align: right;
+      display: block;
+      float: left;
+      color: #d6d6d6;
+      width: 150px;
+      margin-right: 10px;
+    }
+
+    .production #top {
+      background: #CA0000; // red
+    }
+
+    .staging #top {
+      background: #518e16; // green
+    }
+
+    .development #top {
+      background: #006EFF; // blue
+    }
+
+    #page-title {
+      margin-left: 15%;
+      margin-bottom: 10px;
+      padding-left: 10px;
+      border-bottom: 1px solid #efefef;
+    }
+
+    #sidebar {
+      width: 15%;
+      float: left;
+    }
+
+    #content {
+      float: left;
+      width: 85%;
+      padding-left: 10px;
+    }
+  </style>
+  <script language="javascript" type="text/javascript">
+    function resizeIframe(obj) {
+      obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+  </script>
+</head>
+<body class="<%= Rails.env %>">
+  <div id="top">
+    <div class="wrapper">
+      <h1><%= @service_context.app %></h1>
+      <ul class="list-unstyled">
+        <li><span>Datacenter</span> <%= @service_context.dc %></li>
+        <li><span>Host</span> <%= @service_context.host %></li>
+        <li><span>Environment</span> <%= @service_context.env %></li>
+        <li><span>PID</span> <%= @service_context.pid %></li>
+        <li><span>Revision</span> <%= @service_context.rev %></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="page">
+    <div class="wrapper">
+      <div id="page-title"><h1><%= render_title %></h1></div>
+
+      <div id="sidebar">
+        <%= render_sidebar %>
+      </div>
+
+      <div id="content">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
