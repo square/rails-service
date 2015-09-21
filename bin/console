@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "rails/all"
+require "rails/service"
+
+require "pry"
+Pry.start

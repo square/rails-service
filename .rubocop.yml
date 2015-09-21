@@ -1,0 +1,99 @@
+AllCops:
+  RunRailsCops: true
+  Exclude:
+    - 'bin/**/*'
+    - '*.gemspec'
+
+Lint/EndAlignment:
+  AlignWith: variable
+
+Lint/Loop:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Max: 4
+
+Metrics/ClassLength:
+  Max: 1045
+
+Metrics/MethodLength:
+  Max: 418
+
+# We'd like to get this down to 120. But we have to start somewhere.
+Metrics/LineLength:
+  Max: 300
+
+Metrics/AbcSize:
+  Max: 40
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Rails/ActionFilter:
+  EnforcedStyle: filter
+
+Style/CaseIndentation:
+  IndentWhenRelativeTo: end
+
+Style/CollectionMethods:
+  PreferredMethods:
+    find: detect
+
+Style/DotPosition:
+  EnforcedStyle: trailing
+
+Style/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: true
+
+Style/Encoding:
+  EnforcedStyle: when_needed
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19
+
+Style/IndentHash:
+  EnforcedStyle: consistent
+
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Style/Semicolon:
+  AllowAsExpressionSeparator: true
+
+Style/TrailingComma:
+  EnforcedStyleForMultiline: comma
+
+Style/TrivialAccessors:
+  AllowDSLWriters: true
+  AllowPredicates: true
+  ExactNameMatch: true
+
+Documentation:
+  Enabled: false
+
+Style/SignalException:
+  EnforcedStyle: only_raise
+
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Style/FirstParameterIndentation:
+  EnforcedStyle: consistent
+
+Style/TrailingUnderscoreVariable:
+  Enabled: false
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Style/AccessorMethodName:
+  Enabled: false
