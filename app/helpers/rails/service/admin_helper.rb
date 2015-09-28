@@ -6,11 +6,11 @@ module Rails
       end
 
       def render_sidebar
-        li = []
-        Rails::Service::AdminController.action_methods.sort.each do |method|
+        li = Rails::Service::AdminController.action_methods.sort.map do |method|
           text = autoformat_action_name(method)
-          li << content_tag(:li, link_to(text, admin_path(action: method)).html_safe)
+          content_tag(:li, link_to(text, admin_path(action: method)).html_safe)
         end
+
         content_tag(:ul, li.join.html_safe, class: 'nav nav-stacked')
       end
 
@@ -27,7 +27,7 @@ module Rails
         content_tag(:iframe, nil, attrs)
       end
 
-      def render_json(object)
+      def render_pretty_json(object)
         content_tag(:pre, content_tag(:code, JSON.pretty_generate(object), class: 'json'))
       end
 

@@ -22,7 +22,7 @@ module Rails
       end
 
       def dc
-        @dc ||= (ENV.key?('DATACENTER') ? ENV.fetch('DATACENTER') : 'local').downcase
+        @dc ||= ENV.fetch('DATACENTER', 'local').downcase
       end
 
       def host

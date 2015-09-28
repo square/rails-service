@@ -6,13 +6,14 @@ RSpec.describe Rails::Service::AppConfig do
   let(:env) { 'test' }
   let(:config) { described_class.new(path: path, logger: logger, env: env) }
 
-  before do
-    @root_old = Rails.root
-    Rails.application.config.root = File.expand_path('spec/rails_app')
-  end
-
-  after do
-    Rails.application.config.root = @root_old
+  around do |exmaple|
+    old_root = Rails.root
+    begin
+      Rails.application.config.root = File.expand_path('spec/rails_app')
+      example.run
+    ensure
+      Rails.application.config.root = old_root
+    end
   end
 
   describe 'loading yaml config' do

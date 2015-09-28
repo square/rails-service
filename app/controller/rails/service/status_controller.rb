@@ -12,17 +12,11 @@ class Rails::Service::StatusController < Rails::Service::BaseController # ruboco
   SELECT_ONE = 'SELECT 1'.freeze
 
   def db
-    begin
-      sql_result = nil
-      status = :ok
-      time = Benchmark.realtime { sql_result = ActiveRecord::Base.connection.execute(SELECT_ONE).first }
+    time = Benchmark.realtime { ActiveRecord::Base.connection.execute(SELECT_ONE).first }
+    render_status :ok, time: (time * 1_000).round(4)
 
-      time = (time * 1_000).round(4)
-    rescue
-      status = :critical
-    end
-
-    render_status status, time: time
+  rescue => ex
+    render_status :critical, exception: ex.message, class: ex.class.to_s
   end
 
   protected
@@ -32,13 +26,9 @@ class Rails::Service::StatusController < Rails::Service::BaseController # ruboco
   def render_status(status, params = {})
     raise ArgumentError unless STATUS_TYPES.include?(status)
 
-    status_hash = {
-      status: status,
-    }.merge(params)
-
     http_status = status == :critical ? :service_unavailable : :ok
     response.headers['Server-Status'] = status.to_s.capitalize
 
-    render status: http_status, json: status_hash
+    render status: http_status, json: { status: status }.merge(params)
   end
 end
