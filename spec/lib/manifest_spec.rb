@@ -43,7 +43,7 @@ RSpec.describe Rails::Service::Manifest do
   end
 
   describe 'loading file' do
-    context 'file not exists' do
+    context 'file does not exists' do
       let(:path) { 'dobrypies.yaml' }
 
       it 'log that file was not' do
