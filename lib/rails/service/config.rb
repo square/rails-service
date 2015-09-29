@@ -121,7 +121,12 @@ module Rails
 
         require filename
         mod = "#{Rails.application.class.parent_name}::Service::#{resource.to_s.capitalize}::Actions"
-        mod.constantize if Kernel.const_defined?(mod)
+        # This is hack since we can't use `Kernel.const_defined?`
+        # because it's failing on jRuby 1.7
+        begin
+          mod.constantize
+        rescue NameError # rubocop:disable Lint/HandleExceptions
+        end
       end
     end
   end
