@@ -2,7 +2,9 @@
 class Rails::Service::AdminController < Rails::Service::BaseController # rubocop:disable Style/ClassAndModuleChildren
   if Rails::Service.config.admin_action_modules.present?
     Rails::Service.config.admin_action_modules.each do |mod|
-      prepend mod
+      # We'd prefer to use `prepend` here, but we need to be compat
+      # with jruby17
+      include mod
     end
   end
 
