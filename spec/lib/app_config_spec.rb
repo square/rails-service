@@ -6,7 +6,7 @@ RSpec.describe Rails::Service::AppConfig do
   let(:env) { 'test' }
   let(:config) { described_class.new(path: path, logger: logger, env: env) }
 
-  around do |exmaple|
+  around do |example|
     old_root = Rails.root
     begin
       Rails.application.config.root = File.expand_path('spec/rails_app')
