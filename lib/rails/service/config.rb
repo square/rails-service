@@ -30,7 +30,7 @@ module Rails
       end
 
       def process_id
-        @process_id ||= -> (app, dc, host, pid, _rev) { "#{app}:#{dc}:#{host}:#{pid}:#{SecureRandom.uuid}".freeze }
+        @process_id ||= lambda { |app, dc, host, pid, _rev| "#{app}:#{dc}:#{host}:#{pid}:#{SecureRandom.uuid}".freeze }
       end
 
       def pid
@@ -62,11 +62,11 @@ module Rails
       end
 
       def status_routes_constraint
-        @status_routes_constraint ||= -> (_request) { true }
+        @status_routes_constraint ||= lambda { |_request| true }
       end
 
       def admin_routes_constraint
-        @admin_routes_constraint ||= -> (request) { request.local? }
+        @admin_routes_constraint ||= lambda { |request| request.local? }
       end
 
       def admin_action_modules

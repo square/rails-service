@@ -97,3 +97,8 @@ Metrics/ModuleLength:
 
 Style/AccessorMethodName:
   Enabled: false
+
+# For jRuby 1.7 compat we need
+# to disable stabby syntax :-(
+Style/Lambda:
+  Enabled: false
