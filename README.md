@@ -3,6 +3,8 @@
 Rails::Service is an opinionated Rails Engine providing boiler plate needed for
 making microservice Rails application.
 
+**This gem is currently under heavy development. It's not ready for production usage yet.**
+
 ## Note on Microservices
 
 Microservices architecture is a great way to build and scale huge distributed
