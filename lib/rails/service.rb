@@ -23,6 +23,10 @@ module Rails
     def app_config
       @app_config ||= AppConfig.new(config._for_app_config)
     end
+
+    def logger
+      @logger ||= Logger.new('log/service.log')
+    end
   end
 end
 
