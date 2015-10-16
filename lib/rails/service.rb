@@ -8,24 +8,16 @@ module Rails
   module Service
     module_function
 
-    def config
-      @config ||= Config.new
+    class << self
+      attr_reader :config, :context, :manifest, :app_config, :logger
     end
 
-    def context
-      @context ||= Context.new(config._for_context)
-    end
-
-    def manifest
-      @manifest ||= Manifest.new(config._for_manifest)
-    end
-
-    def app_config
-      @app_config ||= AppConfig.new(config._for_app_config)
-    end
-
-    def logger
-      @logger ||= Logger.new('log/service.log')
+    def initialize!
+      @config     = Config.new
+      @context    = Context.new(config._for_context)
+      @manifest   = Manifest.new(config._for_manifest)
+      @app_config = AppConfig.new(config._for_app_config)
+      @logger     = @config.logger
     end
   end
 end
