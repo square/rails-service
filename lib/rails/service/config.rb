@@ -46,15 +46,15 @@ module Rails
       end
 
       def logger
-        @logger ||= Logger.new('log/service.log')
+        @logger ||= Logger.new(Rails.root.join('log/service.log'))
       end
 
       def manifest_path
-        @manifest_path ||= 'app-manifest.yaml'
+        @manifest_path ||= Rails.root.join('app-manifest.yaml')
       end
 
       def app_config_path
-        @app_conifg_path ||= 'config/app-config.yaml'
+        @app_conifg_path ||= Rails.root.join('config/app-config.yaml')
       end
 
       def status_logs_enabled
