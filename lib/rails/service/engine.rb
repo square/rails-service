@@ -10,7 +10,15 @@ module Rails
       isolate_namespace Rails::Service
 
       config.autoload_paths << File.expand_path('../../../', __FILE__)
-      config.service = Rails::Service.config
+
+      config.before_configuration do
+        Rails::Service.initialize!
+        config.service = Rails::Service.config
+      end
+
+      config.to_prepare do
+        # TODO: Do config/manifest reloading here
+      end
 
       initializer 'rails.service.lograge' do |app|
         Rails::Service::Boot.lograge(app)

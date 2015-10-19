@@ -10,6 +10,10 @@ require 'pry'
 require 'rspec'
 require 'rspec/rails'
 
+require 'pathname'
+
+RAILS_APP_ROOT = Pathname.new(File.expand_path('./spec/rails_app'))
+
 RSpec.configure do |config|
   config.color = true
   config.formatter = :progress

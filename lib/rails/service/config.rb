@@ -46,7 +46,7 @@ module Rails
       end
 
       def logger
-        @logger ||= Rails.logger
+        @logger ||= Logger.new(Rails.root.join('log/service.log'))
       end
 
       def manifest_path

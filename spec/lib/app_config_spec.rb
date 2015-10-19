@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Rails::Service::AppConfig do
-  let(:path) { 'config/app-config.yaml' }
+  let(:path) { RAILS_APP_ROOT.join('config/app-config.yaml') }
   let(:logger) { double(:logger) }
   let(:env) { 'test' }
   let(:config) { described_class.new(path: path, logger: logger, env: env) }

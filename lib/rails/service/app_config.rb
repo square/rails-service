@@ -13,7 +13,6 @@ module Rails
         logger = options.fetch(:logger)
         env = options.fetch(:env)
 
-        path = Rails.root.join(path)
         if File.exist?(path)
           file = File.read(path)
           logger.info("loading app config file: #{path}")

@@ -33,7 +33,7 @@ class Rails::Service::AdminController < Rails::Service::BaseController # rubocop
     @manifest = Rails::Service.manifest
   end
 
-  def config
+  def app_config
     @config = Rails::Service.app_config
   end
 end

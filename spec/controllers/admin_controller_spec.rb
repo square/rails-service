@@ -19,9 +19,9 @@ RSpec.describe Rails::Service::AdminController, type: :controller do
   end
 
   it 'renders app config' do
-    get :config
+    get :app_config
     expect(response).to have_http_status :ok
-    expect(response).to render_template 'config'
+    expect(response).to render_template 'app_config'
     expect(assigns(:config)).to eq Rails::Service.app_config
     expect(response.body).to include 'foobar'
     expect(response.body).to_not include 'foobar2'
