@@ -11,6 +11,9 @@ module Rails
 
       config.autoload_paths << File.expand_path('../../../', __FILE__)
 
+      # Serve static asssets for Admin UI.
+      config.serve_static_assets = true
+
       config.before_configuration do
         Rails::Service.initialize!
         config.service = Rails::Service.config
@@ -22,6 +25,10 @@ module Rails
 
       initializer 'rails.service.lograge' do |app|
         Rails::Service::Boot.lograge(app)
+      end
+
+      initializer 'rails.service.static_assets' do |app|
+        app.middleware.use(::ActionDispatch::Static, "#{root}/public")
       end
     end
   end
