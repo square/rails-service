@@ -20,9 +20,14 @@ class Rails::Service::AdminController < Rails::Service::BaseController # rubocop
     @env = ENV.sort
   end
 
-  def routing; end
+  if Rails.env.developement?
+    # Those endpoints basically just embbed the default
+    # rails actions provided by the framework and by default
+    # they're enabled in developement env only.
+    def routing; end
 
-  def rails_properties; end
+    def rails_properties; end
+  end
 
   def manifest
     @manifest = Rails::Service.manifest
