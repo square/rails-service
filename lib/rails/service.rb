@@ -4,6 +4,8 @@ require 'rails/service/context'
 require 'rails/service/manifest'
 require 'rails/service/app_config'
 
+require 'rails/service/container'
+
 module Rails
   module Service
     module_function
