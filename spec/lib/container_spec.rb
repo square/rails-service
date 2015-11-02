@@ -17,6 +17,12 @@ RSpec.describe Rails::Service::Container do
   let!(:bar) {
     Class.new(base) do
       dependencies :foo
+      attr_accessor :foo
+
+      def initialize(deps = {})
+        self.foo = deps[:foo]
+      end
+
       def init
         puts "bar"
       end
@@ -46,6 +52,11 @@ RSpec.describe Rails::Service::Container do
       expect_any_instance_of(bar).to receive :init
 
       container.init
+    end
+
+    it 'should inject dependencies' do
+      container.init
+      expect(container.modules_resolved[:bar].foo.class).to eq foo
     end
   end
 end

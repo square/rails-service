@@ -4,7 +4,7 @@ require 'rails/service/dependency_graph'
 module Rails
   module Service
     class Container
-      attr_accessor :modules
+      attr_accessor :modules, :modules_resolved
 
       def initialize(enabled = [])
         @graph = DependencyGraph.new
