@@ -69,11 +69,11 @@ module Rails
         mods.each do |mod|
           mod_klass =  @modules.fetch(mod)
           deps = unless mod_klass._dependencies.empty?
-            @modules_resolved.slice(*mod_klass._dependencies)
+            @modules_resolved.values_at(*mod_klass._dependencies).map(&:to_module)
           else
-            {}
+            []
           end
-          @modules_resolved[mod] = mod_klass.new(deps)
+          @modules_resolved[mod] = mod_klass.new(*deps)
         end
       end
 

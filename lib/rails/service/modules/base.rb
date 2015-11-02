@@ -21,8 +21,8 @@ module Rails
 
         def initialize(*); end
 
-        def initialize(deps = {})
-          @dependencies = deps
+        def to_module
+          nil
         end
       end
     end
