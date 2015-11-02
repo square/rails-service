@@ -7,20 +7,29 @@ RSpec.describe Rails::Service::Container do
   let(:base) { Rails::Service::Modules::Base }
   let!(:foobar) {
     Class.new(base) do
-      dependencies :foo, :bar
+      dependencies :config, :logger
+
+      attr_accessor :config, :logger
+
+      def initialize(deps = {})
+        self.config = deps[:config]
+        self.logger = deps[:logger]
+      end
+
       def init
         puts "foobar"
       end
     end
   }
 
-  let!(:bar) {
+  let!(:config) {
     Class.new(base) do
-      dependencies :foo
-      attr_accessor :foo
+      dependencies :logger
+
+      attr_accessor :logger
 
       def initialize(deps = {})
-        self.foo = deps[:foo]
+        self.logger = deps[:logger]
       end
 
       def init
@@ -29,7 +38,7 @@ RSpec.describe Rails::Service::Container do
     end
   }
 
-  let!(:foo) {
+  let!(:logger) {
     Class.new(base) do
       def init
         puts "foo"
@@ -39,24 +48,28 @@ RSpec.describe Rails::Service::Container do
 
   before do
     allow(foobar).to receive(:to_s).and_return("foobar")
-    allow(foo).to receive(:to_s).and_return("foo")
-    allow(bar).to receive(:to_s).and_return("bar")
+    allow(config).to receive(:to_s).and_return("config")
+    allow(logger).to receive(:to_s).and_return("logger")
   end
 
   describe 'dependencies' do
-    let(:modules_enabled) { [:foo_bar] }
+    let(:modules_enabled) { [:foobar] }
 
     it 'should resolve module deps' do
       expect_any_instance_of(foobar).to receive :init
-      expect_any_instance_of(foo).to receive :init
-      expect_any_instance_of(bar).to receive :init
+      expect_any_instance_of(config).to receive :init
+      expect_any_instance_of(logger).to receive :init
 
       container.init
     end
 
     it 'should inject dependencies' do
       container.init
-      expect(container.modules_resolved[:bar].foo.class).to eq foo
+
+      expect(container.modules_resolved[:foobar].logger.class).to eq logger
+      expect(container.modules_resolved[:foobar].config.class).to eq config
+
+      expect(container.modules_resolved[:config].logger.class).to eq logger
     end
   end
 end

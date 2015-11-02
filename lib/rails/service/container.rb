@@ -8,7 +8,7 @@ module Rails
 
       def initialize(enabled = [])
         @graph = DependencyGraph.new
-        @modules_enabled = [:logging, :config]
+        @modules_enabled = enabled
         # TODO: Rename me to something better and less confusing
         @modules = {}
         @modules_resolved = {}
