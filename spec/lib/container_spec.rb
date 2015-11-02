@@ -9,8 +9,6 @@ RSpec.describe Rails::Service::Container do
     Class.new(base) do
       dependencies :config, :logger
 
-      attr_accessor :config, :logger
-
       def initialize(deps = {})
         self.config = deps[:config]
         self.logger = deps[:logger]
@@ -25,8 +23,6 @@ RSpec.describe Rails::Service::Container do
   let!(:config) {
     Class.new(base) do
       dependencies :logger
-
-      attr_accessor :logger
 
       def initialize(deps = {})
         self.logger = deps[:logger]

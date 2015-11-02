@@ -12,13 +12,14 @@ module Rails
 
         def self.dependencies(*args)
           @dependencies = args
+          args.each { |arg| attr_accessor(arg.to_sym) }
         end
 
         def self._dependencies
           @dependencies || []
         end
 
-        attr_reader :dependencies
+        def initialize(*); end
 
         def initialize(deps = {})
           @dependencies = deps
