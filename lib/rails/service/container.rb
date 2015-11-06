@@ -76,15 +76,6 @@ module Rails
           @modules_resolved[mod] = mod_klass.new(*deps)
         end
       end
-
-      # Ugh, what a terrible name, fixme maybe?
-      def mod_constantize(mod)
-        "Rails::Service::Modules::#{mod.to_s.classify}".constantize
-      end
-
-      def find_modules
-        ObjectSpace.each_object(Class).select { |klass| klass < Rails::Service::Modules::Base }
-      end
     end
   end
 end
