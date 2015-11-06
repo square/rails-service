@@ -2,6 +2,7 @@ module Rails
   module Service
     module Modules
       class Base
+        # TODO: rename to module name
         def self.name(name)
           @name = name
         end
@@ -21,8 +22,7 @@ module Rails
           @dependencies || []
         end
 
-        def initialize(*); end
-
+        # TODO: Rename it to `module_object` maybe?
         def to_module
           nil
         end

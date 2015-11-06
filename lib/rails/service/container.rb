@@ -65,6 +65,7 @@ module Rails
         modules = {}
         Rails::Service::Modules::Base.subclasses.each do |klass|
           name = resolve_module_name(klass)
+          # TODO: Add error msg
           raise NameError if modules.key?(name)
           modules[name] = klass
         end
