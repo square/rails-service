@@ -6,11 +6,13 @@ module Rails
     class Container
       attr_accessor :modules, :modules_resolved
 
-      def initialize(enabled = [])
+      def initialize(opts = {})
+        @app = opts.delete(:app)
+
         @graph = DependencyGraph.new
         @resolved_graph = []
 
-        @modules_enabled = enabled
+        @modules_enabled = opts.delete(:modules)
         @modules = {}
       end
 

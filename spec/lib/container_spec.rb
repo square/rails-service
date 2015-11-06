@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe Rails::Service::Container do
-  let(:modules_enabled) { [] }
-  let(:container) { described_class.new(modules_enabled) }
+  let(:modules) { [] }
+  let(:options) { { app: nil, modules: modules } }
+  let(:container) { described_class.new(options) }
 
   let(:base) { Rails::Service::Modules::Base }
   let!(:foobar) {
@@ -52,18 +53,18 @@ RSpec.describe Rails::Service::Container do
   end
 
   describe 'dependencies' do
-    let(:modules_enabled) { [:foobar] }
+    let(:modules) { [:foobar] }
 
     it 'should resolve module deps' do
       expect_any_instance_of(foobar).to receive :init
       expect_any_instance_of(config).to receive :init
       expect_any_instance_of(logger).to receive :init
 
-      container.init
+      container.run!
     end
 
     it 'should inject dependencies' do
-      container.init
+      container.run!
 
       expect(container.modules[:foobar].logger).to be_a Logger
       expect(container.modules[:foobar].config).to be_a Hash
