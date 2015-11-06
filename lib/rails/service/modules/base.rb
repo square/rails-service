@@ -10,6 +10,8 @@ module Rails
           @name
         end
 
+        # Add a options hash to disable auto-creating attr's
+        # (eg `dependencies :config, :logger, create_attr: false`)
         def self.dependencies(*args)
           @dependencies = args
           args.each { |arg| attr_accessor(arg.to_sym) }
