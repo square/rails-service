@@ -8,16 +8,24 @@ module Rails
 
       def initialize(enabled = [])
         @graph = DependencyGraph.new
+        @resolved_graph = []
+
         @modules_enabled = enabled
-        # TODO: Rename me to something better and less confusing
         @modules = {}
-        @modules_resolved = {}
       end
 
-      # TODO: Pass `app` for rails initializer to modules as dep.
-      def init(app = nil)
+      # Runs a container
+      def run!
+        init
+        start
+        at_exit { stop }
+      end
+
+      def init
         load_modules
         resolve_dependencies
+        init_modules
+
         modules_call(:init)
       end
 
@@ -31,10 +39,26 @@ module Rails
 
       private
 
-      def modules_call(meth)
-        @modules_resolved.each do |name, module_object|
-          module_object.send(meth) if module_object.respond_to?(meth.to_sym)
+      def modules_call(method)
+        @modules.each do |name, module_object|
+          if module_object.respond_to?(method.to_sym)
+            if method == :init
+              module_init(name, module_object)
+            else
+              module_object.send(method)
+            end
+          end
         end
+      end
+
+      def module_init(name, module_object)
+        arity = module_object.method(:init).arity
+        module_deps = module_object.class._dependencies
+
+        raise ArgumentError, "Module #{module_object} have #{module_deps.length} and #init takes #{arity} args" if arity < -1 && module_deps.length != arity
+
+        module_deps_objects = @modules.values_at(*module_deps).map(&:to_module)
+        module_object.init(*module_deps_objects)
       end
 
       def load_modules
@@ -60,21 +84,11 @@ module Rails
             @graph.add_edge(name, dep)
           end
         end
-
-        inject_dependencies(@graph.resolve)
+        @resolved_graph = @graph.resolve
       end
 
-      # TODO: Since it'll be transformed to hash now, names *must* not be ambigious .
-      def inject_dependencies(mods)
-        mods.each do |mod|
-          mod_klass =  @modules.fetch(mod)
-          deps = unless mod_klass._dependencies.empty?
-            @modules_resolved.values_at(*mod_klass._dependencies).map(&:to_module)
-          else
-            []
-          end
-          @modules_resolved[mod] = mod_klass.new(*deps)
-        end
+      def init_modules
+        @modules = Hash[@modules.map { |name, klass| [name, klass.new] }]
       end
     end
   end

@@ -9,13 +9,9 @@ RSpec.describe Rails::Service::Container do
     Class.new(base) do
       dependencies :config, :logger
 
-      def initialize(config, logger)
+      def init(config, logger)
         self.config = config
         self.logger = logger
-      end
-
-      def init
-        puts "foobar"
       end
     end
   }
@@ -24,12 +20,8 @@ RSpec.describe Rails::Service::Container do
     Class.new(base) do
       dependencies :logger
 
-      def initialize(logger)
+      def init(logger)
         self.logger = logger
-      end
-
-      def init
-        puts "config"
       end
 
       def to_module
@@ -40,12 +32,11 @@ RSpec.describe Rails::Service::Container do
 
   let!(:logger) {
     Class.new(base) do
-      def initialize
-        @logger = Logger.new(STDOUT)
-      end
+      attr_accessor :io
 
-      def init
-        puts "logger"
+      def initialize
+        @io = StringIO.new
+        @logger = Logger.new(@io)
       end
 
       def to_module
@@ -74,10 +65,10 @@ RSpec.describe Rails::Service::Container do
     it 'should inject dependencies' do
       container.init
 
-      expect(container.modules_resolved[:foobar].logger).to be_a Logger
-      expect(container.modules_resolved[:foobar].config).to be_a Hash
+      expect(container.modules[:foobar].logger).to be_a Logger
+      expect(container.modules[:foobar].config).to be_a Hash
 
-      expect(container.modules_resolved[:config].logger).to be_a Logger
+      expect(container.modules[:config].logger).to be_a Logger
     end
   end
 end
