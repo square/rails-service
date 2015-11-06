@@ -21,6 +21,8 @@ module Rails
         at_exit { stop }
       end
 
+      private
+
       def init
         load_modules
         resolve_dependencies
@@ -36,8 +38,6 @@ module Rails
       def stop
         modules_call(:stop)
       end
-
-      private
 
       def modules_call(method)
         @modules.each do |name, module_object|
