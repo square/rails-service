@@ -5,6 +5,7 @@ require 'rails/service/manifest'
 require 'rails/service/app_config'
 
 require 'rails/service/container'
+require 'rails/service/railtie'
 
 module Rails
   module Service
@@ -24,4 +25,4 @@ module Rails
   end
 end
 
-require 'rails/service/engine'
+#require 'rails/service/engine'
