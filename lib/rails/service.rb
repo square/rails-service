@@ -7,6 +7,9 @@ require 'rails/service/app_config'
 require 'rails/service/container'
 require 'rails/service/railtie'
 
+require 'rails/service/modules/logging'
+require 'rails/service/modules/config'
+
 module Rails
   module Service
     module_function
