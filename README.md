@@ -54,29 +54,23 @@ Sample module can look like following:
 ```ruby
 require 'rails/service/modules/base'
 
-module Rails
-  module Service
-    module Modules
-      class PingServerModule < Base
-        dependencies :config, :logger
+class PingServerModule < Rails::Service::Modules::Base
+  dependencies :config, :logger
 
-        attr_accessor :ping_server
+  attr_accessor :ping_server
 
-        def init(config, logger)
-          self.config = config
-          self.logging = logging
-          self.ping_server = PingServer.new(config.ping_server, logger)
-        end
+  def init(config, logger)
+    self.config = config
+    self.logging = logging
+    self.ping_server = PingServer.new(config.ping_server, logger)
+  end
 
-        def start
-          ping_server.start
-        end
+  def start
+    ping_server.start
+  end
 
-        def stop
-          ping_server.stop
-        end
-      end
-    end
+  def stop
+    ping_server.stop
   end
 end
 ```
