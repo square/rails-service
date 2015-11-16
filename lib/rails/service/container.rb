@@ -1,3 +1,5 @@
+require 'active_support/core_ext/class/subclasses'
+
 require 'rails/service/modules/base'
 require 'rails/service/dependency_graph'
 
