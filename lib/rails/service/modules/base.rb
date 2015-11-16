@@ -8,7 +8,7 @@ module Rails
         end
 
         def self._name
-          @name
+          @name || self.to_s.demodulize.downcase.to_sym
         end
 
         # Add a options hash to disable auto-creating attr's

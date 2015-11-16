@@ -60,6 +60,7 @@ module Rails
         module_deps = module_object.class._dependencies
 
         raise ArgumentError, "Module #{module_object} have #{module_deps.length} and #init takes #{arity} args" if arity < -1 && module_deps.length != arity
+        raise ArgumentError, "Modules - #{(module_deps - @modules.keys).inspect} - that are dependency of #{module_object.class._name.inspect} module are undefined" unless @modules.keys & module_deps == module_deps
 
         module_deps_objects = @modules.values_at(*module_deps).map(&:to_module)
         module_object.init(*module_deps_objects)
@@ -69,8 +70,7 @@ module Rails
         modules = {}
         Rails::Service::Modules::Base.subclasses.each do |klass|
           name = resolve_module_name(klass)
-          # TODO: Add error msg
-          raise NameError if modules.key?(name)
+          raise NameError, "Ambigious module names - #{name}" if modules.key?(name)
           modules[name] = klass
         end
 
