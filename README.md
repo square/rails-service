@@ -40,6 +40,61 @@ Or install it yourself as:
 
     $ gem install rails-service
 
+## Modules
+
+Rails::Service embraces modular design by letting you create modules which have a lifecycle and dependency injection. You can think of
+Rails::Service modules as a Rails initializers alternative.
+
+Based on dependencies, each module can have, Rails::Service builds object dependency graph based on which it determines load order.
+Using this order module objects are first initialized and then loaded by executing `init` method which receives its dependencies
+as method arguments (they're already initialized at this point).
+
+Sample module can look like following:
+
+```ruby
+require 'rails/service/modules/base'
+
+module Rails
+  module Service
+    module Modules
+      class PingServer < Base
+        dependencies :config, :logger
+
+        attr_accessor :ping_server
+
+        def init(config, logger)
+          self.config = config
+          self.logging = logging
+          self.ping_server = PingServer.new(config.ping_server, logger)
+        end
+
+        def start
+          ping_server.start
+        end
+
+        def stop
+          ping_server.stop
+        end
+      end
+    end
+  end
+end
+```
+
+### Concepts
+
+  * *Dependency Injection*
+  * *Lifecycle methods*
+  * *Submodules* - [TODO] Each module can have a submodule which will be included (ruby's `include`) inside its parent module.
+    This can be helpful when you want to have your modules extensible. For example you can have submodules for `Status` module
+    with custom status checks.
+
+### Default modules
+
+ * Config - loads application config used by other modules
+ * Logging - sets up and configures logging for service
+ * Admin - mounts Sinatra admin app for your service under `/_admin` [TODO]
+ * Status - mounts Sinatra app responsible for handling `/_status/*` endpoints used for monitoring [TODO]
 
 ## Development
 
