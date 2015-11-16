@@ -57,7 +57,7 @@ require 'rails/service/modules/base'
 module Rails
   module Service
     module Modules
-      class PingServer < Base
+      class PingServerModule < Base
         dependencies :config, :logger
 
         attr_accessor :ping_server
