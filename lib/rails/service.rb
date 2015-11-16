@@ -27,5 +27,3 @@ module Rails
     end
   end
 end
-
-#require 'rails/service/engine'
