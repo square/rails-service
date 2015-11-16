@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'logger'
 
 RSpec.describe Rails::Service::Container do
   let(:modules) { [] }
@@ -8,21 +9,21 @@ RSpec.describe Rails::Service::Container do
   let(:base) { Rails::Service::Modules::Base }
   let!(:foobar) {
     Class.new(base) do
-      dependencies :config, :logger
+      dependencies :config_test, :logger_test
 
       def init(config, logger)
-        self.config = config
-        self.logger = logger
+        self.config_test = config
+        self.logger_test = logger
       end
     end
   }
 
   let!(:config) {
     Class.new(base) do
-      dependencies :logger
+      dependencies :logger_test
 
       def init(logger)
-        self.logger = logger
+        self.logger_test = logger
       end
 
       def to_module
@@ -48,8 +49,8 @@ RSpec.describe Rails::Service::Container do
 
   before do
     allow(foobar).to receive(:to_s).and_return("foobar")
-    allow(config).to receive(:to_s).and_return("config")
-    allow(logger).to receive(:to_s).and_return("logger")
+    allow(config).to receive(:to_s).and_return("config_test")
+    allow(logger).to receive(:to_s).and_return("logger_test")
   end
 
   describe 'dependencies' do
@@ -66,10 +67,22 @@ RSpec.describe Rails::Service::Container do
     it 'should inject dependencies' do
       container.run!
 
-      expect(container.modules[:foobar].logger).to be_a Logger
-      expect(container.modules[:foobar].config).to be_a Hash
+      expect(container.modules[:foobar].logger_test).to be_a Logger
+      expect(container.modules[:foobar].config_test).to be_a Hash
 
-      expect(container.modules[:config].logger).to be_a Logger
+      expect(container.modules[:config_test].logger_test).to be_a Logger
+    end
+
+    context 'class with broken dependency' do
+      let(:with_broken_dep) {
+        Class.new(base) do
+          dependencies :yolo
+        end
+      }
+
+      it 'should raise error because dependency is undefined' do
+        expect { container.run! }.to raise_error ArgumentError
+      end
     end
   end
 end

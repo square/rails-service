@@ -4,14 +4,11 @@ module Rails
   module Service
     module Modules
       class Config < Base
-        dependencies :logger
+        dependencies :logging
 
-        def initialize(logger)
-          self.logger = logger
-        end
-
-        def init
-          logger.debug("initializing config")
+        def init(logging)
+          self.logging = logging
+          logging.debug("initializing config")
         end
       end
     end
