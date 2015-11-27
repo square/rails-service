@@ -46,6 +46,7 @@ module Rails
         modules_call(:stop)
       end
 
+      # TODO: Add exception handling when calling module's methods
       def modules_call(method)
         @modules_resolved.each do |name, module_object|
           if module_object.respond_to?(method.to_sym)
@@ -82,13 +83,23 @@ module Rails
 
       # TODO: We should optimize it. Instead of resolving whole graph,
       # resolve graph of modules that are *enabled*
+      # TODO: Standalone modules are lacking tests!
       def resolve_dependencies
+        # Keeps track of modules without dependecies
+        standalone = []
         @modules_enabled.each do |name, klass|
-          klass._dependencies.each do |dep|
-            @graph.add_edge(name, dep)
+          if klass._dependencies.empty?
+            standalone << name
+          else
+            klass._dependencies.each do |dep|
+              @graph.add_edge(name, dep)
+            end
           end
         end
-        @modules_resolved = @graph.resolve
+        # NB: We to avoid duplication we call #uniq since some modules
+        # can be standalone (no deps) but be a dependency of other module
+        # so they'll end up in both arrays.
+        @modules_resolved = (@graph.resolve + standalone).uniq
       end
 
       def init_modules(app)
