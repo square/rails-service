@@ -1,15 +1,13 @@
-require 'rails/service/modules/base'
+require 'rails/service/base_module'
 
 module Rails
   module Service
-    module Modules
-      class Config < Base
-        dependencies :logging
+    class ConfigModule < BaseModule
+      dependencies :logging
 
-        def init(logging)
-          self.logging = logging
-          logging.debug("initializing config")
-        end
+      def init(logging)
+        self.logging = logging
+        logging.debug("initializing config")
       end
     end
   end

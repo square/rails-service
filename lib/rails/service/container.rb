@@ -1,6 +1,6 @@
 require 'active_support/core_ext/class/subclasses'
 
-require 'rails/service/modules/base'
+require 'rails/service/base_module'
 require 'rails/service/dependency_graph'
 
 module Rails
@@ -69,7 +69,7 @@ module Rails
       end
 
       def load_defined_modules
-        Rails::Service::Modules::Base.subclasses.each do |klass|
+        Rails::Service::BaseModule.subclasses.each do |klass|
           name = resolve_module_name(klass)
           raise NameError, "Ambigious module names - #{name}" if @modules_defined.key?(name)
           @modules_defined[name] = klass

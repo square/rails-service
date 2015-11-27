@@ -6,7 +6,7 @@ RSpec.describe Rails::Service::Container do
   let(:options) { { app: nil, modules: modules } }
   let(:container) { described_class.new(options) }
 
-  let(:base) { Rails::Service::Modules::Base }
+  let(:base) { Rails::Service::BaseModule }
   let!(:foobar) {
     Class.new(base) do
       dependencies :config_test, :logger_test

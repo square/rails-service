@@ -1,23 +1,21 @@
 require 'logger'
 
-require 'rails/service/modules/base'
+require 'rails/service/base_module'
 
 module Rails
   module Service
-    module Modules
-      class Logging < Base
-        def initialize(app)
-          super(app)
-          @logger = Logger.new(STDOUT)
-        end
+    class LoggingModule < BaseModule
+      def initialize(app)
+        super(app)
+        @logger = Logger.new(STDOUT)
+      end
 
-        def to_module
-          @logger
-        end
+      def to_module
+        @logger
+      end
 
-        def init
-          puts "logging INIT"
-        end
+      def init
+        
       end
     end
   end
