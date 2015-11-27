@@ -9,6 +9,8 @@ require 'rails/service/railtie'
 
 require 'rails/service/modules/logging'
 require 'rails/service/modules/config'
+require 'rails/service/modules/status'
+require 'rails/service/modules/admin'
 
 module Rails
   module Service

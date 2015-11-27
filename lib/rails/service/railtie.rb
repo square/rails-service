@@ -9,7 +9,7 @@ module Rails
       end
 
       initializer 'rails.service' do |app|
-        Rails::Service::Container.new(modules: [:config, :logging]).run!(app)
+        Rails::Service::Container.new(modules: [:config, :logging, :status, :admin]).run!(app)
       end
     end
   end
