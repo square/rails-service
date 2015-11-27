@@ -68,19 +68,16 @@ module Rails
         module_object.init(*module_deps_objects)
       end
 
+      # TODO: check if all @enabled modules are defined and raise error if not.
       def load_defined_modules
         Rails::Service::BaseModule.subclasses.each do |klass|
-          name = resolve_module_name(klass)
+          name = klass._name
           raise NameError, "Ambigious module names - #{name}" if @modules_defined.key?(name)
           @modules_defined[name] = klass
         end
         @modules_enabled = @modules_defined.slice(*@enabled)
 
         @defined_modules
-      end
-
-      def resolve_module_name(klass)
-        (klass._name || klass.to_s.demodulize.underscore).to_sym
       end
 
       # TODO: We should optimize it. Instead of resolving whole graph,
