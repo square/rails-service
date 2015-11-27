@@ -6,7 +6,8 @@ module Rails
   module Service
     module Modules
       class Logging < Base
-        def initialize
+        def initialize(app)
+          super(app)
           @logger = Logger.new(STDOUT)
         end
 

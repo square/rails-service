@@ -6,7 +6,7 @@ require 'rails/service/dependency_graph'
 module Rails
   module Service
     class Container
-      attr_accessor :modules, :modules_resolved
+      attr_accessor :modules_resolved
 
       def initialize(opts = {})
         @app = opts.delete(:app)
@@ -14,23 +14,26 @@ module Rails
         @graph = DependencyGraph.new
         @resolved_graph = []
 
-        @modules_enabled = opts.delete(:modules)
-        @modules = {}
+        @enabled = opts.delete(:modules)
+
+        @modules_resolved = {}
+        @modules_enabled = {}
+        @modules_defined = {}
       end
 
       # Runs a container
-      def run!
-        init
+      def run!(app)
+        init(app)
         start
         at_exit { stop }
       end
 
       private
 
-      def init
-        load_modules
+      def init(app)
+        load_defined_modules
         resolve_dependencies
-        init_modules
+        init_modules(app)
 
         modules_call(:init)
       end
@@ -44,7 +47,7 @@ module Rails
       end
 
       def modules_call(method)
-        @modules.each do |name, module_object|
+        @modules_resolved.each do |name, module_object|
           if module_object.respond_to?(method.to_sym)
             if method == :init
               module_init(name, module_object)
@@ -60,40 +63,44 @@ module Rails
         module_deps = module_object.class._dependencies
 
         raise ArgumentError, "Module #{module_object} have #{module_deps.length} and #init takes #{arity} args" if arity < -1 && module_deps.length != arity
-        raise ArgumentError, "Modules - #{(module_deps - @modules.keys).inspect} - that are dependency of #{module_object.class._name.inspect} module are undefined" unless @modules.keys & module_deps == module_deps
 
-        module_deps_objects = @modules.values_at(*module_deps).map(&:to_module)
+        module_deps_objects = @modules_resolved.values_at(*module_deps).map(&:to_module)
         module_object.init(*module_deps_objects)
       end
 
-      def load_modules
-        modules = {}
+      def load_defined_modules
         Rails::Service::Modules::Base.subclasses.each do |klass|
           name = resolve_module_name(klass)
-          raise NameError, "Ambigious module names - #{name}" if modules.key?(name)
-          modules[name] = klass
+          raise NameError, "Ambigious module names - #{name}" if @modules_defined.key?(name)
+          @modules_defined[name] = klass
         end
+        @modules_enabled = @modules_defined.slice(*@enabled)
 
-        # Pick only modules that are enabled
-        @modules = modules.slice!(@modules_enabled)
+        @defined_modules
       end
 
       def resolve_module_name(klass)
         (klass._name || klass.to_s.demodulize.underscore).to_sym
       end
 
-      # TODO: Add logging
+      # TODO: We should optimize it. Instead of resolving whole graph,
+      # resolve graph of modules that are *enabled*
       def resolve_dependencies
-        @modules.map do |name, klass|
+        @modules_enabled.each do |name, klass|
           klass._dependencies.each do |dep|
             @graph.add_edge(name, dep)
           end
         end
-        @resolved_graph = @graph.resolve
+        @modules_resolved = @graph.resolve
       end
 
-      def init_modules
-        @modules = Hash[@modules.map { |name, klass| [name, klass.new] }]
+      def init_modules(app)
+        @modules_resolved = Hash[@modules_resolved.map { |name| [name, init_module_klass(name).new(app)] }]
+      end
+
+      def init_module_klass(name)
+        raise ArgumentError, "Module #{name} undefined" unless @modules_defined.key?(name)
+        @modules_defined.fetch(name)
       end
     end
   end

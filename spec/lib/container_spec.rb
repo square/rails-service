@@ -36,7 +36,9 @@ RSpec.describe Rails::Service::Container do
     Class.new(base) do
       attr_accessor :io
 
-      def initialize
+      def initialize(app)
+        super(app)
+
         @io = StringIO.new
         @logger = Logger.new(@io)
       end
@@ -46,6 +48,8 @@ RSpec.describe Rails::Service::Container do
       end
     end
   }
+
+  let(:app) { nil }
 
   before do
     allow(foobar).to receive(:to_s).and_return("foobar")
@@ -61,28 +65,43 @@ RSpec.describe Rails::Service::Container do
       expect_any_instance_of(config).to receive :init
       expect_any_instance_of(logger).to receive :init
 
-      container.run!
+      container.run!(app)
     end
 
     it 'should inject dependencies' do
-      container.run!
+      container.run!(app)
 
-      expect(container.modules[:foobar].logger_test).to be_a Logger
-      expect(container.modules[:foobar].config_test).to be_a Hash
+      expect(container.modules_resolved[:foobar].logger_test).to be_a Logger
+      expect(container.modules_resolved[:foobar].config_test).to be_a Hash
 
-      expect(container.modules[:config_test].logger_test).to be_a Logger
+      expect(container.modules_resolved[:config_test].logger_test).to be_a Logger
     end
 
     context 'class with broken dependency' do
-      let(:with_broken_dep) {
+      let!(:with_broken_dep) {
         Class.new(base) do
           dependencies :yolo
         end
       }
 
-      it 'should raise error because dependency is undefined' do
-        expect { container.run! }.to raise_error ArgumentError
+      let(:modules) { [:with_broken_dep] }
+
+      before do
+        allow(with_broken_dep).to receive(:to_s).and_return("with_broken_dep")
       end
+
+      it 'should raise error because dependency is undefined' do
+        expect { container.run!(app); }.to raise_error ArgumentError
+      end
+    end
+  end
+
+  describe 'modules' do
+    let(:modules) { [:foobar] }
+
+    it 'should enabled only one module w/ its dependencies' do
+      container.run!(app)
+      expect(container.modules_resolved.length).to eq 3
     end
   end
 end

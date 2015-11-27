@@ -22,6 +22,12 @@ module Rails
           @dependencies || []
         end
 
+        attr_reader :app
+
+        def initialize(app)
+          @app = app
+        end
+
         # TODO: Rename it to `module_object` maybe?
         def to_module
           nil
