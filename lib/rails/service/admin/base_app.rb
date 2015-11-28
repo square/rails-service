@@ -25,6 +25,8 @@ module Rails
         end
       end
 
+      set :public_folder, "#{File.dirname(__FILE__)}/public"
+
       get '/' do
         erb :test, layout: :layout
       end
