@@ -1,8 +1,0 @@
-defaults: &defaults
-  foo:
-    bar: "foobar"
-  foobar: "foobar2"
-test:
-  <<: *defaults
-  foobar: "foobar-overwritten"
-  barfoo: "barfoo"
