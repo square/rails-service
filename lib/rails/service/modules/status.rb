@@ -8,7 +8,7 @@ module Rails
 
       def init(logging)
         app.routes.append do
-          scope '/_status' do
+          scope BaseStatusApp::BASE_PATH do
             mount DefaultStatusApp => "/"
           end
         end

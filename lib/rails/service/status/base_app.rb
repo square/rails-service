@@ -3,6 +3,8 @@ require "sinatra/base"
 module Rails
   module Service
     class BaseStatusApp < Sinatra::Base
+      BASE_PATH = "/_status".freeze
+
       protected
 
       STATUS_TYPES = { ok: 200, warning: 200, critical: 503 }.freeze

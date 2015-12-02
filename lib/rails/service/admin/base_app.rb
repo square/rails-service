@@ -3,6 +3,10 @@ require 'sinatra/base'
 module Rails
   module Service
     class BaseAdminApp < Sinatra::Base
+      BASE_PATH = "/_admin".freeze
+
+      set :public_folder, "#{File.dirname(__FILE__)}/public"
+
       helpers do
         def render_meta_title
 

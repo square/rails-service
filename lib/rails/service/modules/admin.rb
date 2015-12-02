@@ -6,7 +6,7 @@ module Rails
     class AdminModule < BaseModule
       def init
         app.routes.append do
-          scope '/_admin' do
+          scope BaseAdminApp::BASE_PATH do
             mount DefaultAdminApp => "/"
           end
         end
