@@ -48,6 +48,11 @@ module Rails
       def self.sidebar(items)
         @@sidebar.merge!(items)
       end
+
+      def self.get(path, opts = {}, &block)
+        @@sidebar[opts.delete(:sidebar)] = path if opts.key?(:sidebar)
+        super(path, opts, &block)
+      end
     end
   end
 end
