@@ -12,7 +12,7 @@ module Rails
           end
 
           Rails::Service::BaseAdminApp.subclasses.each do |klass|
-            use klass
+            use(AdminModule.preconfigure_app(klass))
           end
 
           run
@@ -21,6 +21,10 @@ module Rails
         app.routes.append do
           mount admin_module => BaseAdminApp::BASE_PATH
         end
+      end
+
+      def self.preconfigure_app(klass)
+        klass.set(:views, ["#{File.expand_path(File.dirname(__FILE__))}/../admin/views"] + klass.views)
       end
     end
   end

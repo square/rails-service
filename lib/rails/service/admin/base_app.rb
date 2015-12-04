@@ -9,11 +9,15 @@ module Rails
 
       configure do
         set :public_folder, "#{File.dirname(__FILE__)}/public"
-        set :views, "#{File.dirname(__FILE__)}/views"
+        set :views, []
         set :erb, layout: :default_layout
       end
 
       helpers do
+        def find_template(views, name, engine, &block)
+          views.each { |v| super(v, name, engine, &block) }
+        end
+
         def render_meta_title
 
         end
