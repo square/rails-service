@@ -8,8 +8,8 @@ module Rails
         config.service = Rails::Service.config
       end
 
-      initializer 'rails.service' do |app|
-        Rails::Service::Container.new(modules: [:config, :logging, :status, :admin]).run!(app)
+      initializer 'rails.service', before: 'load_config_initializers' do |app|
+        Rails::Service::Container.new(modules: app.config.service.modules).run!(app)
       end
     end
   end

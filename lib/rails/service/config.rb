@@ -5,7 +5,7 @@ module Rails
     class Config
       attr_writer :app, :dc, :host
 
-      attr_accessor :process_id
+      attr_accessor :process_id, :modules
 
       attr_writer :status_routes_contraint, :admin_routes_contraint,
         :admin_view_paths, :status_action_modules, :admin_action_modules,
@@ -19,6 +19,10 @@ module Rails
             Rails.application.class.parent_name.downcase
           end
         end
+      end
+
+      def modules
+        @modules ||= [:config, :logging, :status, :admin]
       end
 
       def dc
