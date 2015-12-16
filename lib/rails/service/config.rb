@@ -7,9 +7,8 @@ module Rails
 
       attr_accessor :process_id, :modules
 
-      attr_writer :status_routes_contraint, :admin_routes_contraint,
-        :admin_view_paths, :status_action_modules, :admin_action_modules,
-        :status_logs_enabled, :manifest_path, :logger, :env, :app_config_path
+      attr_writer :status_logs_enabled, :manifest_path, :logger, :env,
+        :app_config_path
 
       def app
         @app ||= begin
@@ -65,30 +64,6 @@ module Rails
         @status_logs_enabled ||= false
       end
 
-      def status_routes_constraint
-        @status_routes_constraint ||= lambda { |_request| true }
-      end
-
-      def admin_routes_constraint
-        @admin_routes_constraint ||= lambda { |request| request.local? }
-      end
-
-      def admin_action_modules
-        @admin_action_modules ||= [_default_action_module(:admin)].compact
-      end
-
-      def status_action_modules
-        @status_action_modules ||= [_default_action_module(:status)].compact
-      end
-
-      def admin_view_paths
-        @admin_view_paths ||= ['lib/service/admin/views']
-      end
-
-      def admin_view_resolvers
-        admin_view_paths.map { |admin_view_path| Rails::Service::AdminViewResolver.new(admin_view_path) }
-      end
-
       def _for_context
         {
           app: app,
@@ -115,22 +90,6 @@ module Rails
           logger: logger,
           env: env,
         }
-      end
-
-      private
-
-      def _default_action_module(resource)
-        filename = "service/#{resource}/actions"
-        return unless File.exist?(Rails.root.join("lib/#{filename}.rb"))
-
-        require filename
-        mod = "#{Rails.application.class.parent_name}::Service::#{resource.to_s.capitalize}::Actions"
-        # This is hack since we can't use `Kernel.const_defined?`
-        # because it's failing on jRuby 1.7
-        begin
-          mod.constantize
-        rescue NameError # rubocop:disable Lint/HandleExceptions
-        end
       end
     end
   end
