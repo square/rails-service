@@ -5,7 +5,7 @@ require 'rails/service/admin/default_app'
 module Rails
   module Service
     class AdminModule < BaseModule
-      def init
+      def start
         admin_module = Sinatra.new do
           def self.name
             "Rails::Service::AdminModule"
