@@ -6,8 +6,7 @@ module Rails
       dependencies :logging
 
       def init(logging)
-        self.logging = logging
-        logging.debug("initializing config")
+        Rails::Service.registry.logger.debug("initializing config")
       end
     end
   end

@@ -1,5 +1,6 @@
 require 'rails/service/version'
 require 'rails/service/config'
+require 'rails/service/registry'
 require 'rails/service/context'
 require 'rails/service/manifest'
 require 'rails/service/app_config'
@@ -17,13 +18,14 @@ module Rails
     module_function
 
     class << self
-      attr_reader :config, :context, :manifest, :app_config, :logger
+      attr_reader :config, :context, :registry, :manifest, :app_config, :logger
     end
 
     def initialize!
       @config     = Config.new
       @context    = Context.new(config._for_context)
       @manifest   = Manifest.new(config._for_manifest)
+      @registry   = Registry.new
       @app_config = AppConfig.new(config._for_app_config)
       @logger     = @config.logger
 
