@@ -5,9 +5,7 @@ require 'rails/service/status/default_app'
 module Rails
   module Service
     class StatusModule < BaseModule
-      dependencies :logging
-
-      def init(logging)
+      def start
         status_module = Sinatra.new do
           def self.name
             "Rails::Service::StatusModule"
