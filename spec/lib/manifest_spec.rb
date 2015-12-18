@@ -5,15 +5,6 @@ RSpec.describe Rails::Service::Manifest do
   let(:logger) { double(:logger) }
   let(:manifest) { described_class.new(path: path, logger: logger) }
 
-  before do
-    @root_old = Rails.root
-    Rails.application.config.root = File.expand_path('spec/fixtures')
-  end
-
-  after do
-    Rails.application.config.root = @root_old
-  end
-
   describe 'chain method access to properties' do
     before do
       allow(logger).to receive(:info)

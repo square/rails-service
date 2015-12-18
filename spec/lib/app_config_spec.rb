@@ -1,20 +1,10 @@
 require 'spec_helper'
 
 RSpec.describe Rails::Service::AppConfig do
-  let(:path) { RAILS_APP_ROOT.join('config/app-config.yaml') }
+  let(:path) { FIXTURES_ROOT.join('app-config.yaml') }
   let(:logger) { double(:logger) }
   let(:env) { 'test' }
   let(:config) { described_class.new(path: path, logger: logger, env: env) }
-
-  around do |example|
-    old_root = Rails.root
-    begin
-      Rails.application.config.root = File.expand_path('spec/rails_app')
-      example.run
-    ensure
-      Rails.application.config.root = old_root
-    end
-  end
 
   describe 'loading yaml config' do
     before do

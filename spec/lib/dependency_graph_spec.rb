@@ -22,7 +22,7 @@ RSpec.describe Rails::Service::DependencyGraph do
       expect(graph.order).to eq order
     end
 
-    it 'shoudl raise cycle error' do
+    it 'should raise cycle error' do
       graph.add_edge(8, 9)
       graph.add_edge(9, 7)
       expect { graph.resolve }.to raise_error Rails::Service::DependencyGraph::CycleDependencyFoundError
